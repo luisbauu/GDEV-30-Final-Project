@@ -68,7 +68,7 @@ void processInput(GLFWwindow *window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_HEIGHT = 800;
 
 // camera
 glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -147,7 +147,7 @@ int main()
 	
 	// Set up the data for each vertex of the triangle
 	Vertex vertices[24];
-	//______________________________________
+	//______________________________________FACING UP	
 	vertices[0].x = -1.0f;	vertices[0].y = -1.0f;	vertices[0].z = -1.0;
 	vertices[0].r = 255;	vertices[0].g = 255;	vertices[0].b = 255;
 	vertices[0].u = 0.0f;	vertices[0].v = 0.0f;
@@ -163,7 +163,7 @@ int main()
 	vertices[3].x = 1.0f;	vertices[3].y = 1.0f;	vertices[3].z = -1.0f;
 	vertices[3].r = 255;	vertices[3].g = 255;	vertices[3].b = 255;
 	vertices[3].u = 1.0f;	vertices[3].v = 1.0f;
-	//______________________________________
+	//______________________________________ FRONT FACING FORWARD
 	vertices[4].x = 1.0f;	vertices[4].y = 1.0f;	vertices[4].z = 1.0f;
 	vertices[4].r = 255;	vertices[4].g = 255;		vertices[4].b = 255;
 	vertices[4].u = 0.0f;	vertices[4].v = 1.0f;
@@ -243,6 +243,22 @@ int main()
 	vertices[23].x = 1.0f;	vertices[23].y = 1.0f;	vertices[23].z = 1.0f;
 	vertices[23].r = 255;	vertices[23].g = 255;	vertices[23].b = 255;
 	vertices[23].u = 1.0f;	vertices[23].v = 1.0f;
+//______________________________________
+	vertices[24].x = 1.0f;	vertices[24].y = 1.0f;	vertices[24].z = 0.0f;
+	vertices[24].r = 255;	vertices[24].g = 255;	vertices[24].b = 255;
+	vertices[24].u = 0.0f;	vertices[24].v = 0.0f;
+
+	vertices[25].x = 1.0f;	vertices[25].y = 1.0f;	vertices[25].z = 1.0f;
+	vertices[25].r = 255;	vertices[25].g = 255;	vertices[25].b = 255;
+	vertices[25].u = 0.0f;	vertices[25].v = 1.0f;
+
+	vertices[26].x = 1.0f;	vertices[26].y = 0.0f;	vertices[26].z = 1.0f;
+	vertices[26].r = 255;	vertices[26].g = 255;	vertices[26].b = 255;
+	vertices[26].u = 1.0f;	vertices[26].v = 0.0f;
+
+	vertices[27].x = 1.0f;	vertices[27].y = 0.0f;	vertices[27].z = 0.0f;
+	vertices[27].r = 255;	vertices[27].g = 255;	vertices[27].b = 255;
+	vertices[27].u = 1.0f;	vertices[27].v = 1.0f;
 
 	// Create a vertex buffer object (VBO), and upload our vertices data to the VBO
 	GLuint vbo;
@@ -377,6 +393,32 @@ int main()
 
 	glBindVertexArray(0);
 //______________________________________
+	GLuint vbo6;
+	glGenBuffers(1, &vbo6);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo6);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint vao6;
+	glGenVertexArrays(1, &vao6);
+	glBindVertexArray(vao6);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo6);
+
+	// Vertex attribute 0 - Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+
+	// Vertex attribute 1 - Color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
+
+	// Vertex attribute 2 - UV coordinate
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
+
+	glBindVertexArray(0);
+//______________________________________
  
 	// Create a shader program
 	GLuint program = CreateShaderProgram("main.vsh", "main.fsh");
@@ -438,46 +480,6 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-
-	// glm::mat4(1.0f) creates an identity matrix (I)
-	// glm::mat4 mat = glm::mat4(1.0f);
-	// mat = glm::translate(mat, glm::vec3(0.5f, 0.0f, -1.0f));
-	// mat = glm::scale(mat, glm::vec3(0.3f, 0.3f, 0.3f));
-	
-	// glm::mat4 mat2 = glm::mat4(1.0f);
-	// mat2 = glm::translate(mat2, glm::vec3(-1.5f, 1.5f, -1.0f));
-	// mat2 = glm::scale(mat2, glm::vec3(0.2f, 0.2f, 0.2f));
-
-	// glm::mat4 mat3 = glm::mat4(1.0f);
-	// mat3 = glm::translate(mat3, glm::vec3(0.0f, 0.0f, -1.5f));
-	// mat3 = glm::scale(mat3, glm::vec3(0.1f, 0.1f, 0.1f));
-
-	// glm::mat4 mat4 = glm::mat4(1.0f);
-	// mat4 = glm::translate(mat4, glm::vec3(0.0f, 0.0f, 0.3f));
-	// mat4 = glm::scale(mat4, glm::vec3(0.05f, 0.05f, 0.05f));
-
-	// glm::mat4 mat5 = glm::mat4(1.0f);
-	// mat5 = glm::translate(mat5, glm::vec3 (3.0f, -1.0f, -3.0f));
-	// mat5 = glm::scale(mat5, glm::vec3(0.6f, 0.6f, 0.6f));
-
-	// glm::mat4 viewMatrix = glm::lookAt(
-	// glm::vec3(0.5f, 0.0f, 1.25f),
-	// glm::vec3(0.5f, 0.0f, 0.0f),
-	// glm::vec3(0.0f, 1.0f, 0.0f));
-
-	// glm::mat4 viewMatrix = camera.GetViewMatrix();
-
-
-	// // glm::mat4 projectionMatrix = glm::perspective(glm::radians(90.0f),(4.0f/3.0f), 0.1f,100.0f);
-
-	// glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.Zoom), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
-
-	// glm::mat4 modelMatrix = projectionMatrix * viewMatrix * mat;
-	// glm::mat4 modelMatrix2 = projectionMatrix * viewMatrix * mat2;
-	// glm::mat4 modelMatrix3 = projectionMatrix * viewMatrix * mat3;
-	// glm::mat4 modelMatrix4 = projectionMatrix * viewMatrix * mat4;
-	// glm::mat4 modelMatrix5 = projectionMatrix * viewMatrix * mat5;
-
 	// Render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -519,6 +521,9 @@ int main()
 		mat5 = glm::translate(mat5, glm::vec3 (3.0f, -1.0f, -3.0f));
 		mat5 = glm::scale(mat5, glm::vec3(0.6f, 0.6f, 0.6f));
 
+		
+
+
 		glm::mat4 viewMatrix = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 		glm::mat4 projectionMatrix = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -528,6 +533,7 @@ int main()
 		glm::mat4 modelMatrix3 = projectionMatrix * viewMatrix * mat3;
 		glm::mat4 modelMatrix4 = projectionMatrix * viewMatrix * mat4;
 		glm::mat4 modelMatrix5 = projectionMatrix * viewMatrix * mat5;
+
 
 
 		// Use the shader program that we created
@@ -631,27 +637,22 @@ int main()
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, tex);
 
+			glm::mat4 mat4 = glm::mat4(1.0f);
+			mat4 = glm::translate(mat4, glm::vec3 (0.0f, 0.0f, 0.0f));
+			mat4 = glm::scale(mat4, glm::vec3(10.0f, 1.0f, 10.0f));
+
+			glm::mat4 modelMatrix4 = projectionMatrix * viewMatrix * mat4;
 
 			glUseProgram(program);
-			{
-				modelMatrix4 = glm::rotate(modelMatrix4, glm::radians(-15.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				modelMatrix4 = glm::translate(modelMatrix4, glm::vec3(-1.0f, 0.0f, 0.0f));
-			}
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix4));
 
-			// Make our sampler in the fragment shader use texture unit 0
-			GLint texUniformLocation = glGetUniformLocation(program, "tex");
-			glUniform1i(texUniformLocation, 0);
+			// // Make our sampler in the fragment shader use texture unit 0
+			// GLint texUniformLocation = glGetUniformLocation(program, "tex");
+			// glUniform1i(texUniformLocation, 0);
 
-			// Draw the 3 vertices using triangle primitives
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
 			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 		}
 
 		glBindVertexArray(0);
@@ -676,11 +677,37 @@ int main()
 			GLint texUniformLocation = glGetUniformLocation(program, "tex");
 			glUniform1i(texUniformLocation, 0);
 
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);  //BACK FACING FORWARD
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);  //FRONT FACING FORWARD
+			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);  //CEILING
+			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4); //FLOOR
+			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4); //LEFT WALL
+			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4); //RIGHT WALL
+		}
+
+		{
+			glBindVertexArray(vao6);
+
+			// Bind our texture to texture unit 0
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tex);
+
+			glm::mat4 mat6 = glm::mat4(1.0f);
+			mat6 = glm::translate(mat6, glm::vec3 (0.0f, 1.0f, -10.0f));
+			mat6 = glm::scale(mat6, glm::vec3(1.0f, 2.0f, 2.0f));
+
+			glm::mat4 modelMatrix6 = projectionMatrix * viewMatrix * mat6;
+
+
+			glUseProgram(program);
+
+			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
+			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix6));
+
+			// Make our sampler in the fragment shader use texture unit 0
+			GLint texUniformLocation = glGetUniformLocation(program, "tex");
+			glUniform1i(texUniformLocation, 0);
+
 			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 		}
 
