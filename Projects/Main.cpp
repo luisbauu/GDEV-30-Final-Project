@@ -2,62 +2,72 @@
 // Otherwise, GLAD will complain about gl.h being already included.
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include<windows.h>
+#include <cstddef>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 // ---------------
 // Function declarations
 // ---------------
 
-/**
- * @brief Creates a shader program based on the provided file paths for the vertex and fragment shaders.
- * @param[in] vertexShaderFilePath Vertex shader file path
- * @param[in] fragmentShaderFilePath Fragment shader file path
- * @return OpenGL handle to the created shader program
- */
+/// <summary>
+/// Creates a shader program based on the provided file paths for the vertex and fragment shaders.
+/// </summary>
+/// <param name="vertexShaderFilePath">Vertex shader file path</param>
+/// <param name="fragmentShaderFilePath">Fragment shader file path</param>
+/// <returns>OpenGL handle to the created shader program</returns>
 GLuint CreateShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
 
-/**
- * @brief Creates a shader based on the provided shader type and the path to the file containing the shader source.
- * @param[in] shaderType Shader type
- * @param[in] shaderFilePath Path to the file containing the shader source
- * @return OpenGL handle to the created shader
- */
+/// <summary>
+/// Creates a shader based on the provided shader type and the path to the file containing the shader source.
+/// </summary>
+/// <param name="shaderType">Shader type</param>
+/// <param name="shaderFilePath">Path to the file containing the shader source</param>
+/// <returns>OpenGL handle to the created shader</returns>
 GLuint CreateShaderFromFile(const GLuint& shaderType, const std::string& shaderFilePath);
 
-/**
- * @brief Creates a shader based on the provided shader type and the string containing the shader source.
- * @param[in] shaderType Shader type
- * @param[in] shaderSource Shader source string
- * @return OpenGL handle to the created shader
- */
+/// <summary>
+/// Creates a shader based on the provided shader type and the string containing the shader source.
+/// </summary>
+/// <param name="shaderType">Shader type</param>
+/// <param name="shaderSource">Shader source string</param>
+/// <returns>OpenGL handle to the created shader</returns>
 GLuint CreateShaderFromSource(const GLuint& shaderType, const std::string& shaderSource);
 
-/**
- * @brief Function for handling the event when the size of the framebuffer changed.
- * @param[in] window Reference to the window
- * @param[in] width New width
- * @param[in] height New height
- */
+/// <summary>
+/// Function for handling the event when the size of the framebuffer changed.
+/// </summary>
+/// <param name="window">Reference to the window</param>
+/// <param name="width">New width</param>
+/// <param name="height">New height</param>
 void FramebufferSizeChangedCallback(GLFWwindow* window, int width, int height);
 
-/**
- * Struct containing data about a vertex
- */
+/// <summary>
+/// Struct containing data about a vertex
+/// </summary>
 struct Vertex
 {
 	GLfloat x, y, z;	// Position
 	GLubyte r, g, b;	// Color
+	GLfloat u, v;		// UV coordinates
 };
 
-/**
- * @brief Main function
- * @return An integer indicating whether the program ended successfully or not.
- * A value of 0 indicates the program ended succesfully, while a non-zero value indicates
- * something wrong happened during execution.
- */
+bool pepeEmotion = true;
+/// <summary>
+/// Main function.
+/// </summary>
+/// <returns>An integer indicating whether the program ended successfully or not.
+/// A value of 0 indicates the program ended succesfully, while a non-zero value indicates
+/// something wrong happened during execution.</returns>
 int main()
 {
 	// Initialize GLFW
@@ -78,8 +88,8 @@ int main()
 
 	// Tell GLFW to create a window
 	int windowWidth = 800;
-	int windowHeight = 600;
-	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Hello Triangle", nullptr, nullptr);
+	int windowHeight = 800;
+	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Textures", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cerr << "Failed to create GLFW window!" << std::endl;
@@ -103,15 +113,103 @@ int main()
 	// --- Vertex specification ---
 	
 	// Set up the data for each vertex of the triangle
-	Vertex vertices[3];
-	vertices[0].x = -0.5f;	vertices[0].y = -0.5f;	vertices[0].z = 0.0f;
-	vertices[0].r = 255;	vertices[0].g = 0;		vertices[0].b = 0;
+	Vertex vertices[24];
+	//______________________________________
+	vertices[0].x = -1.0f;	vertices[0].y = -1.0f;	vertices[0].z = -1.0;
+	vertices[0].r = 255;	vertices[0].g = 255;	vertices[0].b = 255;
+	vertices[0].u = 0.0f;	vertices[0].v = 0.0f;
 
-	vertices[1].x = 0.5f;	vertices[1].y = -0.5f;	vertices[1].z = 0.0f;
-	vertices[1].r = 0;		vertices[1].g = 255;	vertices[1].b = 0;
+	vertices[1].x = 1.0f;	vertices[1].y = -1.0f;	vertices[1].z = -1.0f;
+	vertices[1].r = 255;	vertices[1].g = 255;	vertices[1].b = 255;
+	vertices[1].u = 1.0f;	vertices[1].v = 0.0f;
 
-	vertices[2].x = 0.0f;	vertices[2].y = 0.5f;	vertices[2].z = 0.0f;
-	vertices[2].r = 0;		vertices[2].g = 0;		vertices[2].b = 255;
+	vertices[2].x = -1.0f;	vertices[2].y = 1.0f;	vertices[2].z = -1.0f;
+	vertices[2].r = 255;	vertices[2].g = 255;	vertices[2].b = 255;
+	vertices[2].u = 0.0f;	vertices[2].v = 1.0f;
+
+	vertices[3].x = 1.0f;	vertices[3].y = 1.0f;	vertices[3].z = -1.0f;
+	vertices[3].r = 255;	vertices[3].g = 255;	vertices[3].b = 255;
+	vertices[3].u = 1.0f;	vertices[3].v = 1.0f;
+	//______________________________________
+	vertices[4].x = 1.0f;	vertices[4].y = 1.0f;	vertices[4].z = 1.0f;
+	vertices[4].r = 255;	vertices[4].g = 255;		vertices[4].b = 255;
+	vertices[4].u = 0.0f;	vertices[4].v = 1.0f;
+
+	vertices[5].x = 1.0f;	vertices[5].y = -1.0f;	vertices[5].z = 1.0f;
+	vertices[5].r = 255;	vertices[5].g = 255;	vertices[5].b = 255;
+	vertices[5].u = 0.0f;	vertices[5].v = 0.0f;
+
+	vertices[6].x = -1.0f;	vertices[6].y = 1.0f;	vertices[6].z = 1.0f;
+	vertices[6].r = 255;	vertices[6].g = 255;		vertices[6].b = 255;
+	vertices[6].u = 1.0f;	vertices[6].v = 1.0f;
+
+	vertices[7].x = -1.0f;	vertices[7].y = -1.0f;	vertices[7].z = 1.0f;
+	vertices[7].r = 255;	vertices[7].g = 255;	vertices[7].b = 255;
+	vertices[7].u = 1.0f;	vertices[7].v = 0.0f;
+//______________________________________
+	vertices[8].x = -1.0f;	vertices[8].y = 1.0f;	vertices[8].z = -1.0f;
+	vertices[8].r = 255;	vertices[8].g = 255;		vertices[8].b = 255;
+	vertices[8].u = 0.0f;	vertices[8].v = 0.0f;
+
+	vertices[9].x = -1.0f;	vertices[9].y = 1.0f;	vertices[9].z = 1.0f;
+	vertices[9].r = 255;	vertices[9].g = 255;	vertices[9].b = 255;
+	vertices[9].u = 0.0f;	vertices[9].v = 1.0f;
+
+	vertices[10].x = 1.0f;	vertices[10].y = 1.0f;	vertices[10].z = -1.0f;
+	vertices[10].r = 255;	vertices[10].g = 255;		vertices[10].b = 255;
+	vertices[10].u = 1.0f;	vertices[10].v = 0.0f;
+
+	vertices[11].x = 1.0f;	vertices[11].y = 1.0f;	vertices[11].z = 1.0f;
+	vertices[11].r = 255;	vertices[11].g = 255;	vertices[11].b = 255;
+	vertices[11].u = 1.0f;	vertices[11].v = 1.0f;
+//______________________________________
+	vertices[12].x = -1.0f;	vertices[12].y = -1.0f;	vertices[12].z = -1.0f;
+	vertices[12].r = 255;	vertices[12].g = 255;		vertices[12].b = 255;
+	vertices[12].u = 0.0f;	vertices[12].v = 0.0f;
+
+	vertices[13].x = -1.0f;	vertices[13].y = -1.0f;	vertices[13].z = 1.0f;
+	vertices[13].r = 255;	vertices[13].g = 255;	vertices[13].b = 255;
+	vertices[13].u = 0.0f;	vertices[13].v = 1.0f;
+
+	vertices[14].x = 1.0f;	vertices[14].y = -1.0f;	vertices[14].z = -1.0f;
+	vertices[14].r = 255;	vertices[14].g = 255;		vertices[14].b = 255;
+	vertices[14].u = 1.0f;	vertices[14].v = 0.0f;
+
+	vertices[15].x = 1.0f;	vertices[15].y = -1.0f;	vertices[15].z = 1.0f;
+	vertices[15].r = 255;	vertices[15].g = 255;	vertices[15].b = 255;
+	vertices[15].u = 1.0f;	vertices[15].v = 1.0f;
+//______________________________________
+	vertices[16].x = -1.0f;	vertices[16].y = -1.0f;	vertices[16].z = 1.0f;
+	vertices[16].r = 255;	vertices[16].g = 255;	vertices[16].b = 255;
+	vertices[16].u = 0.0f;	vertices[16].v = 0.0f;
+
+	vertices[17].x = -1.0f;	vertices[17].y = 1.0f;	vertices[17].z = 1.0f;
+	vertices[17].r = 255;	vertices[17].g = 255;	vertices[17].b = 255;
+	vertices[17].u = 0.0f;	vertices[17].v = 1.0f;
+
+	vertices[18].x = -1.0f;	vertices[18].y = -1.0f;	vertices[18].z = -1.0f;
+	vertices[18].r = 255;	vertices[18].g = 255;	vertices[18].b = 255;
+	vertices[18].u = 1.0f;	vertices[18].v = 0.0f;
+
+	vertices[19].x = -1.0f;	vertices[19].y = 1.0f;	vertices[19].z = -1.0f;
+	vertices[19].r = 255;	vertices[19].g = 255;	vertices[19].b = 255;
+	vertices[19].u = 1.0f;	vertices[19].v = 1.0f;
+//______________________________________
+	vertices[20].x = 1.0f;	vertices[20].y = -1.0f;	vertices[20].z = -1.0f;
+	vertices[20].r = 255;	vertices[20].g = 255;	vertices[20].b = 255;
+	vertices[20].u = 0.0f;	vertices[20].v = 0.0f;
+
+	vertices[21].x = 1.0f;	vertices[21].y = 1.0f;	vertices[21].z = -1.0f;
+	vertices[21].r = 255;	vertices[21].g = 255;	vertices[21].b = 255;
+	vertices[21].u = 0.0f;	vertices[21].v = 1.0f;
+
+	vertices[22].x = 1.0f;	vertices[22].y = -1.0f;	vertices[22].z = 1.0f;
+	vertices[22].r = 255;	vertices[22].g = 255;	vertices[22].b = 255;
+	vertices[22].u = 1.0f;	vertices[22].v = 0.0f;
+
+	vertices[23].x = 1.0f;	vertices[23].y = 1.0f;	vertices[23].z = 1.0f;
+	vertices[23].r = 255;	vertices[23].g = 255;	vertices[23].b = 255;
+	vertices[23].u = 1.0f;	vertices[23].v = 1.0f;
 
 	// Create a vertex buffer object (VBO), and upload our vertices data to the VBO
 	GLuint vbo;
@@ -130,14 +228,123 @@ int main()
 	
 	// Vertex attribute 0 - Position
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
 
 	// Vertex attribute 1 - Color
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(sizeof(GLfloat) * 3));
+	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
+
+	// Vertex attribute 2 - UV coordinate
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
 
 	glBindVertexArray(0);
+//______________________________________
+	GLuint vbo2;
+	glGenBuffers(1, &vbo2);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	GLuint vao2;
+	glGenVertexArrays(1, &vao2);
+	glBindVertexArray(vao2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+
+	// Vertex attribute 0 - Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+
+	// Vertex attribute 1 - Color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
+
+	// Vertex attribute 2 - UV coordinate
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
+
+	glBindVertexArray(0);
+//______________________________________
+	GLuint vbo3;
+	glGenBuffers(1, &vbo3);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo3);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint vao3;
+	glGenVertexArrays(1, &vao3);
+	glBindVertexArray(vao3);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo3);
+
+	// Vertex attribute 0 - Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+
+	// Vertex attribute 1 - Color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
+
+	// Vertex attribute 2 - UV coordinate
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
+
+	glBindVertexArray(0);
+//______________________________________
+ 	GLuint vbo4;
+	glGenBuffers(1, &vbo4);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo4);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint vao4;
+	glGenVertexArrays(1, &vao4);
+	glBindVertexArray(vao4);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo4);
+
+	// Vertex attribute 0 - Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+
+	// Vertex attribute 1 - Color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
+
+	// Vertex attribute 2 - UV coordinate
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
+
+	glBindVertexArray(0);
+//______________________________________
+	GLuint vbo5;
+	glGenBuffers(1, &vbo5);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo5);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint vao5;
+	glGenVertexArrays(1, &vao5);
+	glBindVertexArray(vao5);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo5);
+
+	// Vertex attribute 0 - Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+
+	// Vertex attribute 1 - Color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
+
+	// Vertex attribute 2 - UV coordinate
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
+
+	glBindVertexArray(0);
+//______________________________________
+ 
 	// Create a shader program
 	GLuint program = CreateShaderProgram("main.vsh", "main.fsh");
 
@@ -145,20 +352,262 @@ int main()
 	// For now, tell OpenGL to use the whole screen
 	glViewport(0, 0, windowWidth, windowHeight);
 
+	// Create a variable that will contain the ID for our texture,
+	// and use glGenTextures() to generate the texture itself
+	GLuint tex;
+	glGenTextures(1, &tex);
+
+	// --- Load our image using stb_image ---
+
+	// Im image-space (pixels), (0, 0) is the upper-left corner of the image
+	// However, in u-v coordinates, (0, 0) is the lower-left corner of the image
+	// This means that the image will appear upside-down when we use the image data as is
+	// This function tells stbi to flip the image vertically so that it is not upside-down when we use it
+	stbi_set_flip_vertically_on_load(true);
+
+	// 'imageWidth' and imageHeight will contain the width and height of the loaded image respectively
+	int imageWidth, imageHeight, numChannels;
+
+	// Read the image data and store it in an unsigned char array
+	unsigned char* imageData = stbi_load("pepehappy.jpg", &imageWidth, &imageHeight, &numChannels, 0);
+	// unsigned char* imageData = stbi_load("pepesad.jpg", &imageWidth, &imageHeight, &numChannels, 0);
+
+
+	//Make sure that we actually loaded the image before uploading the data to the GPU
+	if (imageData != nullptr)
+	{
+		// Our texture is 2D, so we bind our texture to the GL_TEXTURE_2D target
+		glBindTexture(GL_TEXTURE_2D, tex);
+
+		// Set the filtering methods for magnification and minification
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		// Set the wrapping method for the s-axis (x-axis) and t-axis (y-axis)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		// Upload the image data to GPU memory
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
+		// If we set minification to use mipmaps, we can tell OpenGL to generate the mipmaps for us
+		//glGenerateMipmap(GL_TEXTURE_2D);
+
+		// Once we have copied the data over to the GPU, we can delete
+		// the data on the CPU side, since we won't be using it anymore
+		stbi_image_free(imageData);
+		imageData = nullptr;
+	}
+	else
+	{
+		std::cerr << "Failed to load image" << std::endl;
+	}
+
+	glEnable(GL_DEPTH_TEST);
+
+
+	// glm::mat4(1.0f) creates an identity matrix (I)
+	glm::mat4 mat = glm::mat4(1.0f);
+	mat = glm::translate(mat, glm::vec3(0.5f, 0.0f, -1.0f));
+	mat = glm::scale(mat, glm::vec3(0.3f, 0.3f, 0.3f));
+	
+	glm::mat4 mat2 = glm::mat4(1.0f);
+	mat2 = glm::translate(mat2, glm::vec3(-1.5f, 1.5f, -1.0f));
+	mat2 = glm::scale(mat2, glm::vec3(0.2f, 0.2f, 0.2f));
+
+	glm::mat4 mat3 = glm::mat4(1.0f);
+	mat3 = glm::translate(mat3, glm::vec3(0.0f, 0.0f, -1.5f));
+	mat3 = glm::scale(mat3, glm::vec3(0.1f, 0.1f, 0.1f));
+
+	glm::mat4 mat4 = glm::mat4(1.0f);
+	mat4 = glm::translate(mat4, glm::vec3(0.0f, 0.0f, 0.3f));
+	mat4 = glm::scale(mat4, glm::vec3(0.05f, 0.05f, 0.05f));
+
+	glm::mat4 mat5 = glm::mat4(1.0f);
+	mat5 = glm::translate(mat5, glm::vec3 (3.0f, -1.0f, -3.0f));
+	mat5 = glm::scale(mat5, glm::vec3(0.6f, 0.6f, 0.6f));
+
+	glm::mat4 viewMatrix = glm::lookAt(
+	glm::vec3(0.5f, 0.0f, 1.25f),
+	glm::vec3(0.5f, 0.0f, 0.0f),
+	glm::vec3(0.0f, 1.0f, 0.0f));
+
+
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(90.0f),(4.0f/3.0f), 0.1f,100.0f);
+
+	glm::mat4 modelMatrix = projectionMatrix * viewMatrix * mat;
+	glm::mat4 modelMatrix2 = projectionMatrix * viewMatrix * mat2;
+	glm::mat4 modelMatrix3 = projectionMatrix * viewMatrix * mat3;
+	glm::mat4 modelMatrix4 = projectionMatrix * viewMatrix * mat4;
+	glm::mat4 modelMatrix5 = projectionMatrix * viewMatrix * mat5;
+
 	// Render loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Clear the colors in our off-screen framebuffer
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Bind our texture to texture unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		//BG COLOR RGBA FORMAT
+		glClearColor(0.7, 0, 0, 1);
+
 
 		// Use the shader program that we created
-		glUseProgram(program);
+		{
+			glBindVertexArray(vao);
 
-		// Use the vertex array object that we created
-		glBindVertexArray(vao);
+			// Bind our texture to texture unit 0
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tex);
 
-		// Draw the 3 vertices using triangle primitives
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+			glUseProgram(program);
+			{
+				modelMatrix = glm::rotate(modelMatrix, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 1.0f));
+			}
+
+			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
+			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+			
+			// Make our sampler in the fragment shader use texture unit 0
+			GLint texUniformLocation = glGetUniformLocation(program, "tex");
+			glUniform1i(texUniformLocation, 0);
+
+			// Draw the 3 vertices using triangle primitives
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
+		}
+
+		glBindVertexArray(0);
+
+		{
+			glBindVertexArray(vao2);
+
+			// Bind our texture to texture unit 0
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tex);
+
+
+			glUseProgram(program);
+			{
+				modelMatrix2 = glm::rotate(modelMatrix2, glm::radians(-1.0f), glm::vec3(0.0f, 1.0f, 1.0f));
+			}
+
+			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
+			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix2));
+
+			// Make our sampler in the fragment shader use texture unit 0
+			GLint texUniformLocation = glGetUniformLocation(program, "tex");
+			glUniform1i(texUniformLocation, 0);
+			
+			// Draw the 3 vertices using triangle primitives
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
+		}
+
+		glBindVertexArray(0);
+
+		{	
+			glBindVertexArray(vao3);
+			
+			// Bind our texture to texture unit 0
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tex);
+
+
+			glUseProgram(program);
+			{
+				modelMatrix3 = glm::rotate(modelMatrix3, glm::radians(-13.0f), glm::vec3(-1.0f, 0.0f, 1.0f));
+				modelMatrix3 = glm::translate(modelMatrix3, glm::vec3(0.0f, 1.5f, 0.0f));
+			}
+
+			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
+			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix3));
+
+			// Make our sampler in the fragment shader use texture unit 0
+			GLint texUniformLocation = glGetUniformLocation(program, "tex");
+			glUniform1i(texUniformLocation, 0);
+
+			// Draw the 3 vertices using triangle primitives
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
+		}
+
+		glBindVertexArray(0);
+
+		{
+			glBindVertexArray(vao4);
+
+			// Bind our texture to texture unit 0
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tex);
+
+
+			glUseProgram(program);
+			{
+				modelMatrix4 = glm::rotate(modelMatrix4, glm::radians(-15.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				modelMatrix4 = glm::translate(modelMatrix4, glm::vec3(-1.0f, 0.0f, 0.0f));
+			}
+
+			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
+			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix4));
+
+			// Make our sampler in the fragment shader use texture unit 0
+			GLint texUniformLocation = glGetUniformLocation(program, "tex");
+			glUniform1i(texUniformLocation, 0);
+
+			// Draw the 3 vertices using triangle primitives
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
+		}
+
+		glBindVertexArray(0);
+
+		{
+			glBindVertexArray(vao5);
+
+			// Bind our texture to texture unit 0
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tex);
+
+
+			glUseProgram(program);
+			{
+				modelMatrix5 = glm::rotate(modelMatrix5, glm::radians(3.0f), glm::vec3(1.0f, 0.0f, 1.0f));
+			}
+
+			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
+			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix5));
+
+			// Make our sampler in the fragment shader use texture unit 0
+			GLint texUniformLocation = glGetUniformLocation(program, "tex");
+			glUniform1i(texUniformLocation, 0);
+
+			// Draw the 3 vertices using triangle primitives
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
+		}
 
 		// "Unuse" the vertex array object
 		glBindVertexArray(0);
@@ -187,12 +636,12 @@ int main()
 	return 0;
 }
 
-/**
- * @brief Creates a shader program based on the provided file paths for the vertex and fragment shaders.
- * @param[in] vertexShaderFilePath Vertex shader file path
- * @param[in] fragmentShaderFilePath Fragment shader file path
- * @return OpenGL handle to the created shader program
- */
+/// <summary>
+/// Creates a shader program based on the provided file paths for the vertex and fragment shaders.
+/// </summary>
+/// <param name="vertexShaderFilePath">Vertex shader file path</param>
+/// <param name="fragmentShaderFilePath">Fragment shader file path</param>
+/// <returns>OpenGL handle to the created shader program</returns>
 GLuint CreateShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
 {
 	GLuint vertexShader = CreateShaderFromFile(GL_VERTEX_SHADER, vertexShaderFilePath);
@@ -222,12 +671,12 @@ GLuint CreateShaderProgram(const std::string& vertexShaderFilePath, const std::s
 	return program;
 }
 
-/**
- * @brief Creates a shader based on the provided shader type and the path to the file containing the shader source.
- * @param[in] shaderType Shader type
- * @param[in] shaderFilePath Path to the file containing the shader source
- * @return OpenGL handle to the created shader
- */
+/// <summary>
+/// Creates a shader based on the provided shader type and the path to the file containing the shader source.
+/// </summary>
+/// <param name="shaderType">Shader type</param>
+/// <param name="shaderFilePath">Path to the file containing the shader source</param>
+/// <returns>OpenGL handle to the created shader</returns>
 GLuint CreateShaderFromFile(const GLuint& shaderType, const std::string& shaderFilePath)
 {
 	std::ifstream shaderFile(shaderFilePath);
@@ -248,12 +697,12 @@ GLuint CreateShaderFromFile(const GLuint& shaderType, const std::string& shaderF
 	return CreateShaderFromSource(shaderType, shaderSource);
 }
 
-/**
- * @brief Creates a shader based on the provided shader type and the string containing the shader source.
- * @param[in] shaderType Shader type
- * @param[in] shaderSource Shader source string
- * @return OpenGL handle to the created shader
- */
+/// <summary>
+/// Creates a shader based on the provided shader type and the string containing the shader source.
+/// </summary>
+/// <param name="shaderType">Shader type</param>
+/// <param name="shaderSource">Shader source string</param>
+/// <returns>OpenGL handle to the created shader</returns>
 GLuint CreateShaderFromSource(const GLuint& shaderType, const std::string& shaderSource)
 {
 	GLuint shader = glCreateShader(shaderType);
@@ -277,12 +726,12 @@ GLuint CreateShaderFromSource(const GLuint& shaderType, const std::string& shade
 	return shader;
 }
 
-/**
- * @brief Function for handling the event when the size of the framebuffer changed.
- * @param[in] window Reference to the window
- * @param[in] width New width
- * @param[in] height New height
- */
+/// <summary>
+/// Function for handling the event when the size of the framebuffer changed.
+/// </summary>
+/// <param name="window">Reference to the window</param>
+/// <param name="width">New width</param>
+/// <param name="height">New height</param>
 void FramebufferSizeChangedCallback(GLFWwindow* window, int width, int height)
 {
 	// Whenever the size of the framebuffer changed (due to window resizing, etc.),
