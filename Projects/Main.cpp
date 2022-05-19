@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <vector>   
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -66,20 +66,16 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 800;
-
 // camera
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f, 0.0f);
 
 bool firstMouse = true;
 float yaw   = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
 float pitch =  0.0f;
 float lastX =  800.0f / 2.0;
-float lastY =  600.0 / 2.0;
+float lastY =  800.0f / 2.0;
 float fov   =  45.0f;
 
 // timing
@@ -89,6 +85,7 @@ float lastFrame = 0.0f;
 int windowWidth = 800;
 int windowHeight = 800;
 
+float globalSpeed = 10.0f;
 
 /// <summary>
 /// Main function.
@@ -288,138 +285,7 @@ int main()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
 
 	glBindVertexArray(0);
-//______________________________________
-	GLuint vbo2;
-	glGenBuffers(1, &vbo2);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	GLuint vao2;
-	glGenVertexArrays(1, &vao2);
-	glBindVertexArray(vao2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-
-	// Vertex attribute 0 - Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-
-	// Vertex attribute 1 - Color
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
-
-	// Vertex attribute 2 - UV coordinate
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
-
-	glBindVertexArray(0);
-//______________________________________
-	GLuint vbo3;
-	glGenBuffers(1, &vbo3);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo3);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	GLuint vao3;
-	glGenVertexArrays(1, &vao3);
-	glBindVertexArray(vao3);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo3);
-
-	// Vertex attribute 0 - Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-
-	// Vertex attribute 1 - Color
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
-
-	// Vertex attribute 2 - UV coordinate
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
-
-	glBindVertexArray(0);
-//______________________________________
- 	GLuint vbo4;
-	glGenBuffers(1, &vbo4);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo4);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	GLuint vao4;
-	glGenVertexArrays(1, &vao4);
-	glBindVertexArray(vao4);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo4);
-
-	// Vertex attribute 0 - Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-
-	// Vertex attribute 1 - Color
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
-
-	// Vertex attribute 2 - UV coordinate
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
-
-	glBindVertexArray(0);
-//______________________________________
-	GLuint vbo5;
-	glGenBuffers(1, &vbo5);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo5);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	GLuint vao5;
-	glGenVertexArrays(1, &vao5);
-	glBindVertexArray(vao5);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo5);
-
-	// Vertex attribute 0 - Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-
-	// Vertex attribute 1 - Color
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
-
-	// Vertex attribute 2 - UV coordinate
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
-
-	glBindVertexArray(0);
-//______________________________________
-	GLuint vbo6;
-	glGenBuffers(1, &vbo6);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo6);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	GLuint vao6;
-	glGenVertexArrays(1, &vao6);
-	glBindVertexArray(vao6);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo6);
-
-	// Vertex attribute 0 - Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-
-	// Vertex attribute 1 - Color
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(Vertex, r)));
-
-	// Vertex attribute 2 - UV coordinate
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, u)));
-
-	glBindVertexArray(0);
-//______________________________________
- 
 	// Create a shader program
 	GLuint program = CreateShaderProgram("main.vsh", "main.fsh");
 
@@ -492,224 +358,270 @@ int main()
         // input
         // -----
         processInput(window);
-		// Clear the colors in our off-screen framebuffer
+
+		//BG COLOR RGBA FORMAT
+		glClearColor(245.0f/255.0f,245.0f/255.0f,220.0f/255.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Bind our texture to texture unit 0
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex);
-		//BG COLOR RGBA FORMAT
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-		glm::mat4 mat = glm::mat4(1.0f);
-		mat = glm::translate(mat, glm::vec3(0.5f, 0.0f, -1.0f));
-		mat = glm::scale(mat, glm::vec3(0.3f, 0.3f, 0.3f));
-		
-		glm::mat4 mat2 = glm::mat4(1.0f);
-		mat2 = glm::translate(mat2, glm::vec3(-1.5f, 1.5f, -1.0f));
-		mat2 = glm::scale(mat2, glm::vec3(0.2f, 0.2f, 0.2f));
-
-		glm::mat4 mat3 = glm::mat4(1.0f);
-		mat3 = glm::translate(mat3, glm::vec3(0.0f, 0.0f, -1.5f));
-		mat3 = glm::scale(mat3, glm::vec3(0.1f, 0.1f, 0.1f));
-
-		glm::mat4 mat4 = glm::mat4(1.0f);
-		mat4 = glm::translate(mat4, glm::vec3(0.0f, 0.0f, 0.3f));
-		mat4 = glm::scale(mat4, glm::vec3(0.05f, 0.05f, 0.05f));
-
-		glm::mat4 mat5 = glm::mat4(1.0f);
-		mat5 = glm::translate(mat5, glm::vec3 (3.0f, -1.0f, -3.0f));
-		mat5 = glm::scale(mat5, glm::vec3(0.6f, 0.6f, 0.6f));
-
-		
-
 
 		glm::mat4 viewMatrix = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
-		glm::mat4 projectionMatrix = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projectionMatrix = glm::perspective(glm::radians(fov), (float)imageWidth / (float)imageHeight, 0.1f, 100.0f);
 
-		glm::mat4 modelMatrix = projectionMatrix * viewMatrix * mat;
-		glm::mat4 modelMatrix2 = projectionMatrix * viewMatrix * mat2;
-		glm::mat4 modelMatrix3 = projectionMatrix * viewMatrix * mat3;
-		glm::mat4 modelMatrix4 = projectionMatrix * viewMatrix * mat4;
-		glm::mat4 modelMatrix5 = projectionMatrix * viewMatrix * mat5;
+		// glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);  //BACK FACING FORWARD
+		// glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);  //FRONT FACING FORWARD
+		// glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);  //CEILING
+		// glDrawArrays(GL_TRIANGLE_STRIP, 12, 4); //FLOOR
+		// glDrawArrays(GL_TRIANGLE_STRIP, 16, 4); //LEFT WALL
+		// glDrawArrays(GL_TRIANGLE_STRIP, 20, 4); //RIGHT WALL
+		
+		glUseProgram(program);
+		glBindVertexArray(vao);
+		// FLOOR
 
-
-
-		// Use the shader program that we created
-		{
-			glBindVertexArray(vao);
-
-			// Bind our texture to texture unit 0
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, tex);
-
-			glUseProgram(program);
+		glm::vec3 floorArray[101];
+		int floatCount = 0;
+		for(int i = 0; i < 10; i++){
+			for(int j = 0 ; j < 10; j++)
 			{
-				modelMatrix = glm::rotate(modelMatrix, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 1.0f));
+				floorArray[floatCount] = glm::vec3((-2.0 * i),  0.0f, (-2.0 * j));
+				floatCount++;
 			}
+		}
+
+		for(int i = 0; i < 101; i++)
+		{
+			glm::mat4 mat = glm::mat4(1.0f);
+			mat = glm::scale(mat, glm::vec3(1.0f, 1.0f, 1.0f));
+			mat = glm::translate(mat, floorArray[i]);
+
+			glm::mat4 modelMatrix = projectionMatrix * viewMatrix * mat;
+
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-			
-			// Make our sampler in the fragment shader use texture unit 0
-			GLint texUniformLocation = glGetUniformLocation(program, "tex");
-			glUniform1i(texUniformLocation, 0);
 
-			// Draw the 3 vertices using triangle primitives
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
 			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 		}
 
-		glBindVertexArray(0);
+		//WALLS
 
+		glm::vec3 rightWallArray[11];
+		for(int i = 0; i < 10; i++){
+			rightWallArray[i] = glm::vec3( 0.0f,  0.0f,(-2.0 * i));
+		}
+
+		for(int i = 0; i < 10; i++)
 		{
-			glBindVertexArray(vao2);
-
-			// Bind our texture to texture unit 0
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, tex);
+			glm::mat4 mat2 = glm::mat4(1.0f);
+			mat2 = glm::scale(mat2, glm::vec3(1.0f, 1.0f, 1.0f));
+			mat2 = glm::translate(mat2,rightWallArray[i]);
 
 
-			glUseProgram(program);
-			{
-				modelMatrix2 = glm::rotate(modelMatrix2, glm::radians(-1.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-			}
+			glm::mat4 modelMatrix2 = projectionMatrix * viewMatrix * mat2;
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix2));
 
-			// Make our sampler in the fragment shader use texture unit 0
-			GLint texUniformLocation = glGetUniformLocation(program, "tex");
-			glUniform1i(texUniformLocation, 0);
-			
-			// Draw the 3 vertices using triangle primitives
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
 			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 		}
 
-		glBindVertexArray(0);
+		glm::vec3 leftWallArray[11];
+		for(int i = 0; i < 10; i++){
+			leftWallArray[i] = glm::vec3( -18.0f,  0.0f,(-2.0 * i));
+		}
 
-		{	
-			glBindVertexArray(vao3);
-			
-			// Bind our texture to texture unit 0
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, tex);
+		for(int i = 0; i < 10; i++)
+		{
+			glm::mat4 mat3 = glm::mat4(1.0f);
+			mat3 = glm::scale(mat3, glm::vec3(1.0f, 1.0f, 1.0f));
+			mat3 = glm::translate(mat3,leftWallArray[i]);
 
-
-			glUseProgram(program);
-			{
-				modelMatrix3 = glm::rotate(modelMatrix3, glm::radians(-13.0f), glm::vec3(-1.0f, 0.0f, 1.0f));
-				modelMatrix3 = glm::translate(modelMatrix3, glm::vec3(0.0f, 1.5f, 0.0f));
-			}
+			glm::mat4 modelMatrix3 = projectionMatrix * viewMatrix * mat3;
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix3));
 
-			// Make our sampler in the fragment shader use texture unit 0
-			GLint texUniformLocation = glGetUniformLocation(program, "tex");
-			glUniform1i(texUniformLocation, 0);
-
-			// Draw the 3 vertices using triangle primitives
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
 			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
-			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 		}
 
-		glBindVertexArray(0);
+		glm::vec3 frontWallArray[11];
+		for(int i = 0; i < 10; i++){
+			frontWallArray[i] = glm::vec3( (-2.0 * i),  0.0f, 0.0f);
+		}
 
+		for(int i = 0; i < 10; i++)
 		{
-			glBindVertexArray(vao4);
-
-			// Bind our texture to texture unit 0
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, tex);
-
 			glm::mat4 mat4 = glm::mat4(1.0f);
-			mat4 = glm::translate(mat4, glm::vec3 (0.0f, 0.0f, 0.0f));
-			mat4 = glm::scale(mat4, glm::vec3(10.0f, 1.0f, 10.0f));
+			mat4 = glm::scale(mat4, glm::vec3(1.0f, 1.0f, 1.0f));
+			mat4 = glm::translate(mat4,frontWallArray[i]);
 
 			glm::mat4 modelMatrix4 = projectionMatrix * viewMatrix * mat4;
-
-			glUseProgram(program);
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix4));
 
-			// // Make our sampler in the fragment shader use texture unit 0
-			// GLint texUniformLocation = glGetUniformLocation(program, "tex");
-			// glUniform1i(texUniformLocation, 0);
-
-			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
 		}
 
-		glBindVertexArray(0);
+		glm::vec3 backWallArray[11];
+		for(int i = 0; i < 10; i++){
+			backWallArray[i] = glm::vec3((-2.0 * i),  0.0f, -18.0f);
+		}
 
+		for(int i = 0; i < 10; i++)
 		{
-			glBindVertexArray(vao5);
+			glm::mat4 mat5 = glm::mat4(1.0f);
+			mat5 = glm::scale(mat5, glm::vec3(1.0f, 1.0f, 1.0f));
+			mat5 = glm::translate(mat5,backWallArray[i]);
 
-			// Bind our texture to texture unit 0
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, tex);
-
-
-			glUseProgram(program);
-			{
-				modelMatrix5 = glm::rotate(modelMatrix5, glm::radians(3.0f), glm::vec3(1.0f, 0.0f, 1.0f));
-			}
+			glm::mat4 modelMatrix5 = projectionMatrix * viewMatrix * mat5;
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix5));
 
-			// Make our sampler in the fragment shader use texture unit 0
-			GLint texUniformLocation = glGetUniformLocation(program, "tex");
-			glUniform1i(texUniformLocation, 0);
-
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);  //BACK FACING FORWARD
-			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);  //FRONT FACING FORWARD
-			glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);  //CEILING
-			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4); //FLOOR
-			glDrawArrays(GL_TRIANGLE_STRIP, 16, 4); //LEFT WALL
-			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4); //RIGHT WALL
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}
 
+		glm::vec3 backWallMazeArray[46] = {
+			//FIRST ROW
+			glm::vec3(-0.0f, 0.0f,-2.0f),
+			glm::vec3(-14.0f, 0.0f,-2.0f),
+			glm::vec3(-16.0f, 0.0f,-2.0f),
+			glm::vec3(-18.0f, 0.0f,-2.0f),
+
+
+			glm::vec3(-2.0f, 0.0f,-4.0f),
+			glm::vec3(-6.0f, 0.0f,-4.0f),
+			glm::vec3(-8.0f,0.0f,-4.0f),
+			glm::vec3(-16.0f,0.0f,-4.0f),
+
+			glm::vec3(-4.0f,0.0f,-6.0f),
+			glm::vec3(-6.0f,0.0f,-6.0f),
+			glm::vec3(-12.0f,0.0f,-6.0f),
+			glm::vec3(-14.0f,0.0f,-6.0f),
+
+			glm::vec3(-2.0f, 0.0f, -8.0f),
+			glm::vec3(-12.0f,0.0f, -8.0f),
+			glm::vec3(-14.0f,0.0f, -8.0f),
+			glm::vec3(-16.0f,0.0f, -8.0f),
+
+			glm::vec3(-2.0f,0.0f,-10.0f),
+
+			glm::vec3(0.0f,0.0f,-12.0f),
+			glm::vec3(-2.0f,0.0f,-12.0f),
+			glm::vec3(-4.0f,0.0f,-12.0f),
+			glm::vec3(-14.0f,0.0f,-12.0f),
+
+			glm::vec3(-2.0f,0.0f,-14.0f),
+			glm::vec3(-4.0f,0.0f,-14.0f),
+			glm::vec3(-10.0f,0.0f,-14.0f),
+			glm::vec3(-12.0f,0.0f,-14.0f),
+			glm::vec3(-14.0f,0.0f,-14.0f),
+			glm::vec3(-16.0f,0.0f,-14.0f),
+
+			glm::vec3(-2.0f,0.0f,-16.0f),
+			glm::vec3(-4.0f,0.0f,-16.0f),
+			glm::vec3(-8.0f,0.0f,-16.0f),
+			glm::vec3(-10.0f,0.0f,-16.0f),
+			glm::vec3(-12.0f,0.0f,-16.0f),
+			glm::vec3(-14.0f,0.0f,-16.0f),
+			glm::vec3(-16.0f,0.0f,-16.0f),
+
+
+			glm::vec3(-0.0f,0.0f,-18.0f),
+			glm::vec3(-12.0f,0.0f,-18.0f),
+			glm::vec3(-14.0f,0.0f,-18.0f),
+		};
+
+		for(int i = 0; i < 46; i++)
 		{
-			glBindVertexArray(vao6);
-
-			// Bind our texture to texture unit 0
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, tex);
-
 			glm::mat4 mat6 = glm::mat4(1.0f);
-			mat6 = glm::translate(mat6, glm::vec3 (0.0f, 1.0f, -10.0f));
-			mat6 = glm::scale(mat6, glm::vec3(1.0f, 2.0f, 2.0f));
+			mat6 = glm::scale(mat6, glm::vec3(1.0f, 1.0f, 1.0f));
+			mat6 = glm::translate(mat6,backWallMazeArray[i]);
 
-			glm::mat4 modelMatrix6 = projectionMatrix * viewMatrix * mat6;
-
-
-			glUseProgram(program);
+			glm::mat4 modelMatrix6= projectionMatrix * viewMatrix * mat6;
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix6));
 
-			// Make our sampler in the fragment shader use texture unit 0
-			GLint texUniformLocation = glGetUniformLocation(program, "tex");
-			glUniform1i(texUniformLocation, 0);
+			glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+		}
+
+		glm::vec3 sideWallMazeArray[41] = {
+			glm::vec3(-2.0f,0.0f, -4.0f),
+			glm::vec3(-2.0f,0.0f, -6.0f),
+
+			glm::vec3(-4.0f,0.0f, 0.0f),
+			glm::vec3(-4.0f,0.0f, -2.0f),
+			glm::vec3(-4.0f,0.0f, -8.0f),
+			glm::vec3(-4.0f,0.0f, -16.0f),
+			glm::vec3(-4.0f,0.0f, -18.0f),
+
+			glm::vec3(-6.0f,0.0f, -2.0f),
+			glm::vec3(-6.0f,0.0f, -4.0f),
+			glm::vec3(-6.0f,0.0f, -8.0f),
+			glm::vec3(-6.0f,0.0f, -10.0f),
+			glm::vec3(-6.0f,0.0f, -16.0f),
+
+			glm::vec3(-8.0f,0.0f, 0.0f),
+			glm::vec3(-8.0f,0.0f, -6.0f),
+			glm::vec3(-8.0f,0.0f, -8.0f),
+			glm::vec3(-8.0f,0.0f, -10.0f),
+			glm::vec3(-8.0f,0.0f, -12.0f),
+			glm::vec3(-8.0f,0.0f, -14.0f),
+			glm::vec3(-8.0f,0.0f, -16.0f),
+			glm::vec3(-8.0f,0.0f, -18.0f),
+
+			glm::vec3(-10.0f,0.0f, -2.0f),
+			glm::vec3(-10.0f,0.0f, -10.0f),
+			glm::vec3(-10.0f,0.0f, -12.0f),
+			glm::vec3(-10.0f,0.0f, -18.0f),
+
+			glm::vec3(-12.0f,0.0f, -2.0f),
+			glm::vec3(-12.0f,0.0f, -4.0f),
+			glm::vec3(-12.0f,0.0f, -12.0f),
+			glm::vec3(-12.0f,0.0f, -14.0f),
+
+			glm::vec3(-14.0f,0.0f, -8.0f),
+
+			glm::vec3(-18.0f,0.0f, -6.0f),
+			glm::vec3(-18.0f,0.0f, -8.0f),
+			glm::vec3(-18.0f,0.0f, -10.0f),
+			glm::vec3(-18.0f,0.0f, -12.0f),
+			glm::vec3(-18.0f,0.0f, -14.0f),
+			glm::vec3(-18.0f,0.0f, -18.0f),
+		};
+
+		for(int i = 0; i < 41; i++)
+		{
+			glm::mat4 mat7 = glm::mat4(1.0f);
+			mat7 = glm::scale(mat7, glm::vec3(1.0f, 1.0f, 1.0f));
+			mat7 = glm::translate(mat7, sideWallMazeArray[i]);
+
+			glm::mat4 modelMatrix7 = projectionMatrix * viewMatrix * mat7;
+
+			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
+			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix7));
 
 			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		// "Unuse" the vertex array object
 		glBindVertexArray(0);
@@ -848,7 +760,7 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+    float cameraSpeed = static_cast<float>(globalSpeed * deltaTime);
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPos += cameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -857,6 +769,8 @@ void processInput(GLFWwindow *window)
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+        cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);		
 }
 
 
