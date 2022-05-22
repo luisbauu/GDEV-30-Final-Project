@@ -20,19 +20,29 @@ uniform sampler2D tex;
 
 uniform vec3 ambientLightColor,diffuseLightColor,specularLightColor;
 uniform vec3 lightLoc;
-
+uniform vec3 camLoc;
+uniform float shiny;
 void main()
 {
 	vec3 ambient;
-
 	vec3 diffuse;
+	vec3 specular;
+
 	vec3 result;
 
 	vec3 lightPosition;
 	vec3 to_light;
 
+	vec3 camPosition;
+	vec3 camDirection;
+
+	vec4 reflection;
+
+	float shininess;
+	float spec;
 	float cosAngle;
 
+	shininess = shiny;
 	ambient = ambientLightColor;
 
 	lightPosition = lightLoc;
@@ -43,8 +53,15 @@ void main()
 
 	diffuse = diffuseLightColor * cosAngle;
 
+	camDirection = camPosition - outVertexPosition;
+
+	reflection = reflect(vec4(-to_light,0.0), outNormalVector);
+	camDirection = normalize(camPosition - outVertexPosition);
+	spec = pow(max(dot(reflection, vec4(camDirection,0.0)), 0.0), shininess);
+	specular = specularLightColor * spec;
+
 	// Get pixel color of the texture at the current UV coordinate
 	// and output it as our final fragment color
-	result = ambient + diffuse;
+	result = ambient + diffuse + specular;
 	fragColor =  vec4(result,0) * texture(tex, outUV);
 }
