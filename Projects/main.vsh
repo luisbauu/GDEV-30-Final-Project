@@ -15,8 +15,11 @@ out vec2 outUV;
 // Color (will be passed to the fragment shader)
 out vec3 outColor;
 
+// Position (will be passed to the fragment shader)
+out vec3 outVertexPosition;
+
 // Normal Matrix (will be passed to the fragment shader)
-out mat4 outNormalVector;
+out vec4 outNormalVector;
 
 uniform mat4 translate,model,mvp;
 
@@ -29,7 +32,9 @@ void main()
 	normalMatrix = transpose(inverse(model));
 
 	gl_Position = translate * vec4(newPosition, 1.0);
+
 	outUV = vertexUV;
 	outColor = vertexColor;
-	outNormalVector = normalMatrix;
+	outVertexPosition = vertexPosition;
+	outNormalVector = normalMatrix * vec4(newPosition,1.0);
 }

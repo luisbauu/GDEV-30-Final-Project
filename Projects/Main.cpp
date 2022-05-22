@@ -347,8 +347,10 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	glm::vec3 ambientColor = glm::vec3(0.1f, 0.1f, 0.1f);
-	glm::vec3 diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 diffuseColor = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::vec3 specularColor = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	glm::vec3 lightLocation = glm::vec3(10.0f, 10.0f, 0.0f);
 
 	// Render loop
 	while (!glfwWindowShouldClose(window))
@@ -388,9 +390,13 @@ int main()
 		GLint ambientLightingUniform = glGetUniformLocation(program, "ambientLightColor");
 		glUniform3fv(ambientLightingUniform, 1, glm::value_ptr(ambientColor));
 		
-	
-		// FLOOR
+		GLint diffuseLightingUniform = glGetUniformLocation(program, "diffuseLightColor");
+		glUniform3fv(diffuseLightingUniform, 1, glm::value_ptr(diffuseColor));
+		
+		GLint lightPositionUniform = glGetUniformLocation(program, "lightLoc");
+		glUniform3fv(lightPositionUniform, 1, glm::value_ptr(lightLocation));
 
+		// FLOOR
 		glm::vec3 floorArray[101];
 		int floatCount = 0;
 		for(int i = 0; i < 10; i++){
