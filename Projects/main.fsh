@@ -6,6 +6,9 @@ in vec2 outUV;
 // Color of the fragment received from the vertex shader (interpolated by the rasterization stage)
 in vec3 outColor;
 
+// normalVector received from the vertex shader (interpolated by the rasterization stage)
+in mat4 outNormalVector;
+
 // Final color of the fragment that will be rendered on the screen
 out vec4 fragColor;
 

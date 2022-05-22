@@ -399,6 +399,11 @@ int main()
 
 			glm::mat4 modelMatrix = projectionMatrix * viewMatrix * mat;
 
+			GLint modelMatrixUniform = glGetUniformLocation(program, "model");
+			glUniformMatrix4fv(modelMatrixUniform, 1, GL_FALSE, glm::value_ptr(mat));
+
+			GLint mvpUniform = glGetUniformLocation(program, "mvp");
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
