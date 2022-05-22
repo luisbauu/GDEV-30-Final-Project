@@ -346,6 +346,10 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
+	glm::vec3 ambientColor = glm::vec3(0.1f, 0.1f, 0.1f);
+	glm::vec3 diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 specularColor = glm::vec3(0.0f, 1.0f, 0.0f);
+
 	// Render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -379,6 +383,12 @@ int main()
 		
 		glUseProgram(program);
 		glBindVertexArray(vao);
+		//Ambient Lighting
+
+		GLint ambientLightingUniform = glGetUniformLocation(program, "ambientLightColor");
+		glUniform3fv(ambientLightingUniform, 1, glm::value_ptr(ambientColor));
+		
+	
 		// FLOOR
 
 		glm::vec3 floorArray[101];
@@ -427,6 +437,12 @@ int main()
 
 			glm::mat4 modelMatrix2 = projectionMatrix * viewMatrix * mat2;
 
+			GLint modelMatrixUniform = glGetUniformLocation(program, "model");
+			glUniformMatrix4fv(modelMatrixUniform, 1, GL_FALSE, glm::value_ptr(mat2));
+
+			GLint mvpUniform = glGetUniformLocation(program, "mvp");
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix2));
+
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix2));
 
@@ -445,6 +461,12 @@ int main()
 			mat3 = glm::translate(mat3,leftWallArray[i]);
 
 			glm::mat4 modelMatrix3 = projectionMatrix * viewMatrix * mat3;
+			
+			GLint modelMatrixUniform = glGetUniformLocation(program, "model");
+			glUniformMatrix4fv(modelMatrixUniform, 1, GL_FALSE, glm::value_ptr(mat3));
+
+			GLint mvpUniform = glGetUniformLocation(program, "mvp");
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix3));
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix3));
@@ -465,6 +487,12 @@ int main()
 
 			glm::mat4 modelMatrix4 = projectionMatrix * viewMatrix * mat4;
 
+			GLint modelMatrixUniform = glGetUniformLocation(program, "model");
+			glUniformMatrix4fv(modelMatrixUniform, 1, GL_FALSE, glm::value_ptr(mat4));
+
+			GLint mvpUniform = glGetUniformLocation(program, "mvp");
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix4));
+
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix4));
 
@@ -483,6 +511,12 @@ int main()
 			mat5 = glm::translate(mat5,backWallArray[i]);
 
 			glm::mat4 modelMatrix5 = projectionMatrix * viewMatrix * mat5;
+
+			GLint modelMatrixUniform = glGetUniformLocation(program, "model");
+			glUniformMatrix4fv(modelMatrixUniform, 1, GL_FALSE, glm::value_ptr(mat5));
+
+			GLint mvpUniform = glGetUniformLocation(program, "mvp");
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix5));
 
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix5));
@@ -549,6 +583,12 @@ int main()
 
 			glm::mat4 modelMatrix6= projectionMatrix * viewMatrix * mat6;
 
+			GLint modelMatrixUniform = glGetUniformLocation(program, "model");
+			glUniformMatrix4fv(modelMatrixUniform, 1, GL_FALSE, glm::value_ptr(mat6));
+
+			GLint mvpUniform = glGetUniformLocation(program, "mvp");
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix6));
+
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix6));
 
@@ -608,24 +648,17 @@ int main()
 
 			glm::mat4 modelMatrix7 = projectionMatrix * viewMatrix * mat7;
 
+			GLint modelMatrixUniform = glGetUniformLocation(program, "model");
+			glUniformMatrix4fv(modelMatrixUniform, 1, GL_FALSE, glm::value_ptr(mat7));
+
+			GLint mvpUniform = glGetUniformLocation(program, "mvp");
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix7));
+
 			GLint translateuniformLocation = glGetUniformLocation(program, "translate");
 			glUniformMatrix4fv(translateuniformLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix7));
 
 			glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 		// "Unuse" the vertex array object
