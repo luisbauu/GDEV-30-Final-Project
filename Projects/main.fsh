@@ -18,7 +18,7 @@ out vec4 fragColor;
 // Texture unit of the texture
 uniform sampler2D tex;
 
-uniform vec3 ambientLightColor,diffuseLightColor,specularLightColor;
+uniform vec3 ambientLightColor,diffuseLightColor,specularLightColor, objectSpecularColor;
 uniform vec3 lightLoc;
 uniform vec3 camLoc;
 uniform float shiny;
@@ -58,7 +58,7 @@ void main()
 	reflection = reflect(vec4(-to_light,0.0), outNormalVector);
 	camDirection = normalize(camPosition - outVertexPosition);
 	spec = pow(max(dot(reflection, vec4(camDirection,0.0)), 0.0), shininess);
-	specular = specularLightColor * spec;
+	specular = -(specularLightColor * objectSpecularColor * spec);
 
 	// Get pixel color of the texture at the current UV coordinate
 	// and output it as our final fragment color

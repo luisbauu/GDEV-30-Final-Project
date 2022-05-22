@@ -349,6 +349,7 @@ int main()
 	glm::vec3 ambientColor = glm::vec3(0.1f, 0.1f, 0.1f);
 	glm::vec3 diffuseColor = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::vec3 specularColor = glm::vec3(0.3f, 0.3f, 0.3f);
+	glm::vec3 objectSpecular = glm::vec3(0.3f, 0.3f, 0.3f);
 
 	glm::vec3 lightLocation = glm::vec3(0.0f, 0.0f, 5.0f);
 
@@ -398,6 +399,9 @@ int main()
 		GLint specularLightingUniform = glGetUniformLocation(program, "specularLightColor");
 		glUniform3fv(specularLightingUniform, 1, glm::value_ptr(specularColor));
 		
+		GLint objectSpecularUniform = glGetUniformLocation(program, "objectSpecularColor");
+		glUniform3fv(objectSpecularUniform, 1, glm::value_ptr(objectSpecular));
+
 		GLint lightPositionUniform = glGetUniformLocation(program, "lightLoc");
 		glUniform3fv(lightPositionUniform, 1, glm::value_ptr(lightLocation));
 
