@@ -353,7 +353,7 @@ int main()
 
 	glm::vec3 lightLocation = glm::vec3(0.0f, 0.0f, 5.0f);
 
-	float specShine = 50.0;
+	float specShine = 5.0;
 
 	// Render loop
 	while (!glfwWindowShouldClose(window))
@@ -422,6 +422,8 @@ int main()
 			}
 		}
 
+		glm::mat4 mat = glm::mat4(1.0f);
+
 		for(int i = 0; i < 101; i++)
 		{
 			glm::mat4 mat = glm::mat4(1.0f);
@@ -441,6 +443,8 @@ int main()
 
 			glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
 		}
+
+		
 
 		//WALLS
 
