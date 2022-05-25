@@ -26,7 +26,6 @@ uniform mat4 translate,model,mvp;
 void main()
 {
 	mat4 normalMatrix;
-	mat4 modelLoc = model;
 
 	vec3 newPosition = vertexPosition;
 	
@@ -37,7 +36,11 @@ void main()
 	outUV = vertexUV;
 	outColor = vertexColor;
 
-	outVertexPosition = vec3(modelLoc[0][0], modelLoc[1][2], modelLoc[2][3]);
+	outVertexPosition = vec3(model[0][0], model[1][1], model[2][2]);
+	/*outNormalVector = normalMatrix * vec4(vertexPosition, 1.0);*/
+
+	/*outVertexPosition = vertexPosition;*/
+
+	outNormalVector = normalMatrix * vec4(model[3][0], model[3][1], model[3][2],1.0);
 	
-	outNormalVector = normalMatrix * vec4(modelLoc[0][0], modelLoc[1][2], modelLoc[2][3],1.0);
 }
