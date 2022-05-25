@@ -55,13 +55,13 @@ void main()
 
 	camDirection = camPosition - outVertexPosition;
 
-	reflection = reflect(vec4(-to_light,0.0), outNormalVector);
+	reflection = reflect(vec4(to_light,0.0), outNormalVector);
 	camDirection = normalize(camPosition - outVertexPosition);
 	spec = pow(max(dot(reflection, vec4(camDirection,0.0)), 0.0), shininess);
-	specular = -(specularLightColor * objectSpecularColor * spec);
+	specular = (specularLightColor * objectSpecularColor * spec);
 
 	// Get pixel color of the texture at the current UV coordinate
 	// and output it as our final fragment color
-	result = ambient + diffuse + specular;
+	result = (ambient + diffuse + specular) * objectSpecularColor;
 	fragColor =  vec4(result,0) * texture(tex, outUV);
 }
