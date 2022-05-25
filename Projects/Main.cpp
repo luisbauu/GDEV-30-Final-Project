@@ -351,7 +351,7 @@ int main()
 	glm::vec3 specularColor = glm::vec3(0.3f, 0.3f, 0.3f);
 	glm::vec3 objectSpecular = glm::vec3(0.4f, 0.4f, 0.4f);
 
-	glm::vec3 lightLocation = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 lightLocation = glm::vec3(-20.0f, -20.0f, 0.0f);
 
 	float specShine = 0.3;
 
