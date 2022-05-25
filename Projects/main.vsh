@@ -22,19 +22,22 @@ out vec3 outVertexPosition;
 out vec4 outNormalVector;
 
 uniform mat4 translate,model,mvp;
-uniform vec3 vertPos;
+
 void main()
 {
 	mat4 normalMatrix;
+	mat4 modelLoc = model;
 
 	vec3 newPosition = vertexPosition;
-
+	
 	normalMatrix = transpose(inverse(model));
 
 	gl_Position = translate * vec4(newPosition, 1.0);
 
 	outUV = vertexUV;
 	outColor = vertexColor;
-	outVertexPosition = vec3(gl_Position[0], gl_Position[1], gl_Position[2]);
-	outNormalVector = normalMatrix * vec4(newPosition,1.0);
+
+	outVertexPosition = vec3(modelLoc[0][0], modelLoc[1][2], modelLoc[2][3]);
+	
+	outNormalVector = normalMatrix * vec4(modelLoc[0][0], modelLoc[1][2], modelLoc[2][3],1.0);
 }
