@@ -63,7 +63,7 @@ void main()
 
 	// Get pixel color of the texture at the current UV coordinate
 	// and output it as our final fragment color
-	result = (sin(time))*(ambient + diffuse + specular);
+	result = (abs(sin(time)))*(ambient + diffuse + specular);
 
 	fragColor =  vec4(result,0.0) * texture(tex, outUV);
 }
