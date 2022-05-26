@@ -264,6 +264,8 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+
+
 	// Create a vertex array object that contains data on how to map vertex attributes
 	// (e.g., position, color) to vertex shader properties.
 	GLuint vao;
@@ -714,7 +716,6 @@ int main()
 
 	return 0;
 }
-
 /// <summary>
 /// Creates a shader program based on the provided file paths for the vertex and fragment shaders.
 /// </summary>
