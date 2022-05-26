@@ -358,6 +358,8 @@ int main()
 	// Render loop
 	while (!glfwWindowShouldClose(window))
 	{
+		double current_time = glfwGetTime();
+		double sinValue = fabs((float)sin(current_time));
 		// per-frame time logic
         // --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -369,7 +371,7 @@ int main()
         processInput(window);
 
 		//BG COLOR RGBA FORMAT
-		glClearColor(245.0f/255.0f,245.0f/255.0f,220.0f/255.0f, 1.0f);
+		glClearColor((sinValue * 245.0f)/255.0f,(sinValue * 245.0f)/255.0f,(sinValue * 220.0f)/255.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glActiveTexture(GL_TEXTURE0);
