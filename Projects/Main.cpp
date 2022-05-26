@@ -360,7 +360,7 @@ int main()
 	// Render loop
 	while (!glfwWindowShouldClose(window))
 	{
-		double current_time = glfwGetTime();
+		double current_time = glfwGetTime()/2;
 		double sinValue = fabs((float)sin(current_time));
 		// per-frame time logic
         // --------------------
@@ -416,7 +416,7 @@ int main()
 		glUniform3fv(cameraPositionUniform, 1, glm::value_ptr(cameraPos));
 
 		GLint timeLocation = glGetUniformLocation(program, "time");
-		glUniform1f(timeLocation, glfwGetTime());
+		glUniform1f(timeLocation, glfwGetTime()/2);
 
 		// FLOOR
 		glm::vec3 floorArray[101];
