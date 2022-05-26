@@ -22,6 +22,7 @@ uniform vec3 ambientLightColor,diffuseLightColor,specularLightColor, objectSpecu
 uniform vec3 lightLoc;
 uniform vec3 camLoc;
 uniform float shiny;
+uniform float time;
 void main()
 {
 	vec3 ambient;
@@ -49,7 +50,7 @@ void main()
 	to_light = lightPosition - outVertexPosition;
 	to_light = normalize(to_light);
 
-	cosAngle = max(dot(vec4(to_light,0.0), outNormalVector), 0.0);
+	cosAngle = max(dot(vec4(to_light,0.2), outNormalVector), 0.0);
 
 	diffuse = diffuseLightColor * cosAngle;
 
@@ -58,11 +59,11 @@ void main()
 	reflection = reflect(vec4(-to_light,1.0), outNormalVector);
 	camDirection = normalize(camPosition - outVertexPosition);
 	spec = pow(max(dot(reflection, vec4(camDirection,0.0)), 0.0), shininess);
-	specular = (specularLightColor * objectSpecularColor * spec);
+	specular = specularLightColor * objectSpecularColor * spec;
 
 	// Get pixel color of the texture at the current UV coordinate
 	// and output it as our final fragment color
-	result = (ambient + diffuse + specular) * objectSpecularColor;
+	result = (sin(time))*(ambient + diffuse + specular);
 
-	fragColor =  vec4(result,0) * texture(tex, outUV);
+	fragColor =  vec4(result,0.0) * texture(tex, outUV);
 }

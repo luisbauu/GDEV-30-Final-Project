@@ -411,6 +411,9 @@ int main()
 		GLint cameraPositionUniform = glGetUniformLocation(program, "camLoc");
 		glUniform3fv(cameraPositionUniform, 1, glm::value_ptr(cameraPos));
 
+		GLint timeLocation = glGetUniformLocation(program, "time");
+		glUniform1f(timeLocation, glfwGetTime());
+
 		// FLOOR
 		glm::vec3 floorArray[101];
 		int floatCount = 0;
